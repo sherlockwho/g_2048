@@ -5,14 +5,12 @@
 #include "Player.h"
 
 Player::Player(string name) {
-
+    this->name = name;
 }
 
-Player::~Player() {
+Player::~Player() = default;
 
-}
-
-Player::Player() {}
+Player::Player() = default;
 
 
 const string &Player::getName() {

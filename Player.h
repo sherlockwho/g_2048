@@ -14,7 +14,7 @@ class Player {
 private:
     string name;
 public:
-    int score;
+    int score{};
 
     Player(string name);
 

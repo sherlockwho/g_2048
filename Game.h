@@ -5,21 +5,21 @@
 #ifndef G_2048_GAME_H
 #define G_2048_GAME_H
 
-
 #include "Player.h"
 #include <string>
 
 using namespace std;
-
-class Game {
+class Player;
+class Game
+{
 private:
     bool end;
     int endValue{};
     string mode;
     const int ROW = 4;
     const int COL = 4;
-    int blank{};
-    int **map{};
+    int blank;
+    int **map;
 
     void run_2048();
 
@@ -52,10 +52,9 @@ public:
 
     bool print();
 
-    const string printNum(int i, int j);
+    string printNum(int i, int j);
 
     bool isFull();
 };
-
 
 #endif //G_2048_GAME_H

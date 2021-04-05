@@ -17,14 +17,13 @@ int main(int argc, char *argv[])
                 game->g_test();
                 break;
             default:
-                cout << "Invalid option \"" << command << "\"" << endl;
                 break;
             }
         }
     }
     else
     {
-        game->g_game();
+        game->g_test();
     }
     delete game;
     return 0;
