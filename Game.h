@@ -14,10 +14,10 @@ class Game
 {
 private:
     bool end;
-    int endValue{};
+    int endValue;
     string mode;
-    const int ROW = 4;
-    const int COL = 4;
+    int ROW;
+    int COL;
     int blank;
     int **map;
 
@@ -55,6 +55,8 @@ public:
     string printNum(int i, int j);
 
     bool isFull();
+
+    void g_level();
 };
 
 #endif //G_2048_GAME_H

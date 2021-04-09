@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        game->g_test();
+        game->g_game();
     }
     delete game;
     return 0;
