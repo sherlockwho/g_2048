@@ -27,6 +27,8 @@ private:
 
     void g_double();
 
+    void g_initMap();
+
 public:
     void g_test();
 
