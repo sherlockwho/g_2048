@@ -18,10 +18,13 @@ Game::~Game() = default;
 Game::Game()
 {
     end = false;
+    cheat = 0;
+    cheater = " ";
     ROW = 4;
     COL = 4;
     blank = ROW * COL;
 }
+
 void Game::g_initMap()
 {
     this->map = new int *[ROW];
@@ -61,7 +64,7 @@ void Game::g_game()
  */
 void Game::run_2048()
 {
-GAME_LOOP:
+GAME_LOOP: //输入无效指令或选定游戏难度后跳转至此
     cout << "--------欢迎来到2048！--------" << endl;
     cout << "请选择游戏模式：" << endl;
     cout << "1. 单人模式" << endl;
@@ -183,8 +186,25 @@ void Game::move(Player *player)
     } //无法移动，游戏结束
     cout << R"(" w ": 上移 " z ": 下移 " a ": 左移  " d ": 右移 )" << endl;
     char opt;
-MOVE_LOOP:
+
+MOVE_LOOP: //输出无效指令提示后跳转至此重新输入
+    if (cheater != " " && cheater != player->getName()) {
+        char trigger;
+        if ((trigger = triggered(player)) != 'n') {
+            cout << command << "同意请按 \'" << trigger << "\' " << endl;
+        }
+    }
     cin >> opt;
+    cout << opt << endl;
+    if (mode == "double" && (cheat == 0 && opt == 'c'))
+    {
+        getline(cin, command);
+        cheater = player->getName();
+        cheat = 1;
+        cout << "道具使用成功～" << endl;
+        cout << R"(" w ": 上移 " z ": 下移 " a ": 左移  " d ": 右移 )" << endl;
+        cin >> opt;
+    }
     switch (opt)
     {
     case 'w':
@@ -193,7 +213,7 @@ MOVE_LOOP:
             goto INVALID;
         }
         break;
-    case 'x':
+    case 'z':
         if (!moveDown(player))
         {
             goto INVALID;
@@ -211,11 +231,62 @@ MOVE_LOOP:
             goto INVALID;
         }
         break;
+    case 'c':
+        if (mode == "double")
+        {
+            cin.clear();
+            cout << "道具已经被用啦" << endl;
+        }
     default:
-    INVALID:
+    INVALID: //输入无效指令时跳转至此
         cout << "无效指令，请重新输入: " << endl;
         goto MOVE_LOOP;
     }
+}
+
+/**
+ * 判断当前玩家是否触发了道具
+ * @return
+ */
+char Game::triggered(Player *player)
+{
+    char movableDirection = 'n';
+
+    if (canMoveUp())
+    {
+        movableDirection = 'w';
+    }
+    if (canMoveDown())
+    {
+        if (movableDirection == 'n')
+        {
+            movableDirection = 'z';
+        }
+        else
+        {
+            return 'n';
+        }
+    }
+    if (canMoveLeft())
+    {
+        if (movableDirection == 'n')
+        {
+            movableDirection = 'a';
+        }
+        else
+        {
+            return 'n';
+        }
+    }
+    if (canMoveRight())
+    {
+        if (movableDirection == 'n')
+        {
+            movableDirection = 'd';
+        }
+        return 'n';
+    }
+    return movableDirection;
 }
 
 /**
@@ -567,7 +638,7 @@ void Game::g_level()
     cout << "5. 5*5 " << endl;
     cout << "q. 返回 " << endl;
     char opt;
-LEVEL_LOOP:
+LEVEL_LOOP: //输入无效指令时跳转至此
     cin >> opt;
     switch (opt)
     {
@@ -590,4 +661,97 @@ LEVEL_LOOP:
         goto LEVEL_LOOP;
     }
     blank = ROW * COL;
+}
+
+bool Game::canMoveUp()
+{
+    for (int i = 0; i < COL; i++)
+    {
+        for (int j = 1; j < ROW; j++)
+        {
+            if (map[j][i] != 0 && map[j - 1][i] == 0)
+            {
+                return true;
+            }
+        }
+
+        for (int j = 1; j < ROW; j++)
+        {
+            if (map[j][i] == map[j - 1][i] && map[j - 1][i] != 0)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Game::canMoveDown()
+{
+    for (int i = 0; i < COL; i++)
+    {
+        for (int j = ROW - 2; j >= 0; j--)
+        {
+            if (map[j][i] != 0 && map[j + 1][i] == 0)
+            {
+                return true;
+            }
+        }
+
+        for (int j = ROW - 2; j >= 0; j--)
+        {
+            if (map[j][i] == map[j + 1][i] && map[j + 1][i] != 0)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Game::canMoveRight()
+{
+    for (int i = 0; i < ROW; i++)
+    {
+        for (int j = COL - 2; j >= 0; j--)
+        {
+            if (map[i][j] != 0 && map[i][j + 1] == 0)
+            {
+                return true;
+            }
+        }
+
+        for (int j = ROW - 2; j >= 0; j--)
+        {
+            if (map[i][j] == map[i][j + 1] && map[i][j + 1] != 0)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Game::canMoveLeft()
+{
+    for (int i = 0; i < ROW; i++)
+    {
+        for (int j = 1; j < COL; j++)
+        {
+            if (map[i][j] != 0 && map[i][j - 1] == 0)
+            {
+                return true;
+            }
+        }
+        for (int j = 1; j < COL; j++)
+        {
+            if (map[i][j] == map[i][j - 1] && map[i][j - 1] != 0)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }

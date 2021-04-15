@@ -20,6 +20,9 @@ private:
     int COL;
     int blank;
     int **map;
+    int cheat;
+    string cheater;
+    string command;
 
     void run_2048();
 
@@ -59,6 +62,16 @@ public:
     bool isFull();
 
     void g_level();
+
+    char triggered(Player *player);
+
+    bool canMoveUp();
+
+    bool canMoveDown();
+
+    bool canMoveRight();
+
+    bool canMoveLeft();
 };
 
 #endif //G_2048_GAME_H
