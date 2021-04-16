@@ -102,7 +102,7 @@ void Game::g_single()
     cout << "你的名字： " << endl;
     string name;
     getline(cin, name);
-    auto player = new Player(name);
+    Player *player = new Player(name);
     play(player, nullptr);
     delete player;
 }
@@ -116,10 +116,10 @@ void Game::g_double()
     mode = "double";
     cout << "玩家一： " << endl;
     cin >> name;
-    auto *player1 = new Player(name);
+    Player *player1 = new Player(name);
     cout << "玩家二： " << endl;
     cin >> name;
-    auto *player2 = new Player(name);
+    Player *player2 = new Player(name);
     play(player1, player2);
     delete player1;
     delete player2;
@@ -184,13 +184,15 @@ void Game::move(Player *player)
     {
         return;
     } //无法移动，游戏结束
-    cout << R"(" w ": 上移 " z ": 下移 " a ": 左移  " d ": 右移 )" << endl;
+    cout << "\" w \": 上移 \" z \": 下移 \" a \": 左移  \" d \": 右移 " << endl;
     char opt;
 
 MOVE_LOOP: //输出无效指令提示后跳转至此重新输入
-    if (cheater != " " && cheater != player->getName()) {
+    if (cheater != " " && cheater != player->getName())
+    {
         char trigger;
-        if ((trigger = triggered(player)) != 'n') {
+        if ((trigger = triggered(player)) != 'n')
+        {
             cout << command << "同意请按 \'" << trigger << "\' " << endl;
         }
     }
@@ -202,7 +204,7 @@ MOVE_LOOP: //输出无效指令提示后跳转至此重新输入
         cheater = player->getName();
         cheat = 1;
         cout << "道具使用成功～" << endl;
-        cout << R"(" w ": 上移 " z ": 下移 " a ": 左移  " d ": 右移 )" << endl;
+        cout << "\" w \": 上移 \" z \": 下移 \" a \": 左移  \" d \": 右移 " << endl;
         cin >> opt;
     }
     switch (opt)
@@ -532,7 +534,7 @@ void Game::add()
             ran++;
         }
     }
-    map[(ran - 1) / ROW][(ran - 1) % COL] = 2;
+    map[(ran - 1) / ROW][(ran - 1) % COL] = ((rand() % 2 == 0) ? 2 : 4);
 }
 
 /**
